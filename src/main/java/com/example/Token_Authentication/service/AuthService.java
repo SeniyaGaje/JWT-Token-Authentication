@@ -76,6 +76,13 @@ public class AuthService {
         user.setRoles(roles);
         userRepository.save(user);
     }
+    @Transactional
+    public void signOut(String refreshToken) {
+        refreshTokenService.findByToken(refreshToken).ifPresent(token -> {
+            refreshTokenService.deleteByToken(token.getToken());
+            System.out.println("Deleted refresh token for user: " + token.getUser().getEmail());
+        });
+    }
 
 
     public JwtResponse refreshToken(String refreshToken) {

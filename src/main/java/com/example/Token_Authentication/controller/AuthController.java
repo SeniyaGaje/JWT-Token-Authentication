@@ -2,6 +2,7 @@ package com.example.Token_Authentication.controller;
 
 import com.example.Token_Authentication.dto.*;
 import com.example.Token_Authentication.service.AuthService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +28,12 @@ public class AuthController {
     @PostMapping("/refreshtoken")
     public ResponseEntity<?> refreshtoken(@RequestBody TokenRefreshRequest request) {
         return ResponseEntity.ok(authService.refreshToken(request.getRefreshToken()));
+    }
+
+    @PostMapping("/signout")
+    @Transactional
+    public ResponseEntity<?> logoutUser(@RequestBody TokenRefreshRequest request) {
+        authService.signOut(request.getRefreshToken());
+        return ResponseEntity.ok("Successfully signed out");
     }
 }
