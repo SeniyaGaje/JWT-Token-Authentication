@@ -4,11 +4,13 @@ import com.example.Token_Authentication.dto.*;
 import com.example.Token_Authentication.entity.*;
 import com.example.Token_Authentication.repository.*;
 import com.example.Token_Authentication.utils.JwtUtils;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,17 +33,20 @@ public class AuthService {
     @Autowired
     private RefreshTokenService refreshTokenService;
 
+    @Transactional
     public JwtResponse authenticateUser(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        refreshTokenService.deleteByUserId(user.getUserId());
+
         String jwt = jwtUtils.generateJwtToken(authentication);
+        RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(user.getUserId());
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-        return new JwtResponse(jwt, refreshToken.getToken(), userDetails.getUsername());
+        return new JwtResponse(jwt, refreshToken.getToken(), user.getEmail());
     }
 
     public void registerUser(SignupRequest signUpRequest) {
