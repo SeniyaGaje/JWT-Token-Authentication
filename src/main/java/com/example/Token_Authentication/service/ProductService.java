@@ -14,10 +14,24 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<ProductEntity> getAllProducts() {
-        return productRepository.findAll();
+        try {
+            return productRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch products: " + e.getMessage());
+        }
     }
 
     public ProductEntity createProduct(ProductEntity product) {
-        return productRepository.save(product);
+        try {
+            if (product.getName() == null || product.getName().trim().isEmpty()) {
+                throw new RuntimeException("Product name cannot be empty");
+            }
+            if (product.getPrice() <= 0) {
+                throw new RuntimeException("Product price must be positive");
+            }
+            return productRepository.save(product);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create product: " + e.getMessage());
+        }
     }
 }
