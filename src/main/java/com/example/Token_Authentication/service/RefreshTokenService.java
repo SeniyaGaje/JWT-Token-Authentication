@@ -4,7 +4,7 @@ import com.example.Token_Authentication.entity.RefreshTokenEntity;
 import com.example.Token_Authentication.repository.RefreshTokenRepository;
 import com.example.Token_Authentication.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -14,17 +14,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class RefreshTokenService {
 
     @Value("${app.jwt.refreshTokenExpirationMs}")
     private Long refreshTokenDurationMs;
 
-    @Autowired
-    private RefreshTokenRepository refreshTokenRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
 
     public RefreshTokenEntity createRefreshToken(Long userId) {
         deleteByUserId(userId);
@@ -60,10 +57,12 @@ public class RefreshTokenService {
         }
         return token;
     }
+
     @Transactional
     public void deleteByUserId(Long userId) {
         refreshTokenRepository.deleteByUser(userRepository.findById(userId).get());
     }
+
     @Transactional
     public void deleteByToken(String token) {
         refreshTokenRepository.deleteByToken(token);

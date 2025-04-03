@@ -2,20 +2,20 @@ package com.example.Token_Authentication.controller;
 
 import com.example.Token_Authentication.entity.ProductEntity;
 import com.example.Token_Authentication.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/products")
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
     @GetMapping
     public ResponseEntity<?> getAllProducts() {
@@ -38,21 +38,10 @@ public class ProductController {
         }
     }
 
+    @Getter
+    @AllArgsConstructor
     private static class ErrorResponse {
-        private String error;
-        private String details;
-
-        public ErrorResponse(String error, String details) {
-            this.error = error;
-            this.details = details;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public String getDetails() {
-            return details;
-        }
+        private final String error;
+        private final String details;
     }
 }

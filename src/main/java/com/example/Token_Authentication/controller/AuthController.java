@@ -3,17 +3,19 @@ package com.example.Token_Authentication.controller;
 import com.example.Token_Authentication.dto.*;
 import com.example.Token_Authentication.service.AuthService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
@@ -58,33 +60,16 @@ public class AuthController {
         }
     }
 
+    @Getter
+    @AllArgsConstructor
     private static class SuccessResponse {
-        private String message;
-
-        public SuccessResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
+        private final String message;
     }
 
+    @Getter
+    @AllArgsConstructor
     private static class ErrorResponse {
-        private String error;
-        private String details;
-
-        public ErrorResponse(String error, String details) {
-            this.error = error;
-            this.details = details;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public String getDetails() {
-            return details;
-        }
+        private final String error;
+        private final String details;
     }
 }

@@ -1,17 +1,12 @@
 package com.example.Token_Authentication.dto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public class JwtResponse {
+
     private final String accessToken;
     private final String refreshToken;
     private final String email;
-
-    public JwtResponse(String accessToken, String refreshToken, String email) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-        this.email = email;
-    }
-
-    public String getAccessToken() { return accessToken; }
-    public String getRefreshToken() { return refreshToken; }
-    public String getEmail() { return email; }
 }

@@ -2,16 +2,16 @@ package com.example.Token_Authentication.service;
 
 import com.example.Token_Authentication.entity.ProductEntity;
 import com.example.Token_Authentication.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     public List<ProductEntity> getAllProducts() {
         try {

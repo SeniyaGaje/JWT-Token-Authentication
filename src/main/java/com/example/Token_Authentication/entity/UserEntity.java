@@ -2,7 +2,6 @@ package com.example.Token_Authentication.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
 
